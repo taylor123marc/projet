@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Administration – Rendez-vous{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+  <div class="card-header">
+    <h5><i class="fas fa-cog me-2"></i>Tableau de bord – Rendez-vous du jour</h5>
+  </div>
+  <div class="card-body">
+    <form method="GET" class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-control" name="date" value="{{ filtre_date }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Service</label>
+        <select class="form-select" name="service">
+          <option value="">Tous les services</option>
+          {% for s in services %}
+          <option value="{{ s.id }}" {% if filtre_service == s.id|string %}selected{% endif %}>{{ s.nom }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-vert w-100">
+          <i class="fas fa-filter me-2"></i>Filtrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if rdvs %}
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Réf.</th><th>Patient</th><th>Téléphone</th>
+            <th>Service</th><th>Médecin</th><th>Heure</th>
+            <th>Statut</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rdv in rdvs %}
+          <tr>
+            <td><strong>RDV-{{ '%05d'|format(rdv.id) }}</strong></td>
+            <td>{{ rdv.prenom }} {{ rdv.nom }}</td>
+            <td>{{ rdv.telephone }}</td>
+            <td>{{ rdv.service_nom }}</td>
+            <td>Dr. {{ rdv.medecin_nom }}</td>
+            <td><strong>{{ rdv.heure_rdv }}</strong></td>
+            <td>
+              <span class="badge badge-{{ rdv.statut }} rounded-pill px-2">
+                {% if rdv.statut == 'en_attente' %}En attente
+                {% elif rdv.statut == 'confirme' %}Confirmé
+                {% else %}Annulé{% endif %}
+              </span>
+            </td>
+            <td>
+              <div class="d-flex gap-1">
+                {% if rdv.statut != 'confirme' %}
+                <form method="POST" action="{{ url_for('changer_statut', rdv_id=rdv.id, statut='confirme') }}">
+                  <button class="btn btn-success btn-sm" title="Confirmer">
+                    <i class="fas fa-check"></i>
+                  </button>
+                </form>
+                {% endif %}
+                {% if rdv.statut != 'annule' %}
+                <form method="POST" action="{{ url_for('changer_statut', rdv_id=rdv.id, statut='annule') }}">
+                  <button class="btn btn-danger btn-sm" title="Annuler"
+                    onclick="return confirm('Annuler ce RDV ?')">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">
+  <i class="fas fa-info-circle me-2"></i>Aucun rendez-vous pour cette date / ce service.
+</div>
+{% endif %}
+{% endblock %}

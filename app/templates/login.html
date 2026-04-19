@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Connexion Administration{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header text-center"><h5><i class="fas fa-lock me-2"></i>Administration</h5></div>
+      <div class="card-body p-4">
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label">Nom d'utilisateur</label>
+            <input type="text" class="form-control" name="username" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-vert w-100">
+            <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

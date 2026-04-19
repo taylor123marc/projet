@@ -1,0 +1,21 @@
+[Unit]
+Description=Hôpital Général de Yaoundé 1 – Application Flask
+After=network.target mysql.service
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory={{ app_dir }}
+Environment="PATH={{ app_dir }}/venv/bin"
+EnvironmentFile={{ app_dir }}/.env
+ExecStart={{ app_dir }}/venv/bin/gunicorn \
+    --workers 3 \
+    --bind 127.0.0.1:{{ app_port }} \
+    --access-logfile /var/log/hopital-access.log \
+    --error-logfile /var/log/hopital-error.log \
+    app:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

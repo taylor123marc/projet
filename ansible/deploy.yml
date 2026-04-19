@@ -1,0 +1,32 @@
+---
+# ================================================================
+# Playbook principal – Déploiement Hôpital Général de Yaoundé 1
+# Usage : ansible-playbook -i inventory.ini deploy.yml
+# ================================================================
+
+- name: "Déploiement de l'application Hôpital Général de Yaoundé 1"
+  hosts: master
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - database
+    - app
+    - nginx
+
+  post_tasks:
+    - name: "Vérification – l'application répond sur le port 5000"
+      uri:
+        url: "http://localhost:{{ app_port }}/"
+        return_content: no
+        status_code: 200
+      retries: 5
+      delay: 3
+      register: result
+      until: result.status == 200
+
+    - name: "Déploiement terminé avec succès"
+      debug:
+        msg: >
+          Application disponible sur http://{{ ansible_host }}/
+          Admin : http://{{ ansible_host }}/admin (admin / Admin2024!)

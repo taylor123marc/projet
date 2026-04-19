@@ -1,0 +1,49 @@
+---
+# ── Rôle : nginx ─────────────────────────────────────────────
+
+- name: Installer Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Supprimer la configuration par défaut de Nginx
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Copier la configuration Nginx pour l'application
+  template:
+    src: hopital.nginx.j2
+    dest: /etc/nginx/sites-available/hopital-yaounde
+    mode: '0644'
+  notify: Redémarrer Nginx
+
+- name: Activer le site Nginx
+  file:
+    src: /etc/nginx/sites-available/hopital-yaounde
+    dest: /etc/nginx/sites-enabled/hopital-yaounde
+    state: link
+  notify: Redémarrer Nginx
+
+- name: Vérifier la configuration Nginx
+  command: nginx -t
+  changed_when: false
+
+- name: Démarrer et activer Nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Ouvrir le port 80 dans le pare-feu UFW
+  ufw:
+    rule: allow
+    port: "80"
+    proto: tcp
+
+- name: Ouvrir le port 443 dans le pare-feu UFW (HTTPS futur)
+  ufw:
+    rule: allow
+    port: "443"
+    proto: tcp

@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Prendre un rendez-vous{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h5><i class="fas fa-calendar-plus me-2"></i>Prendre un rendez-vous</h5>
+  </div>
+  <div class="card-body p-4">
+    <form method="POST" id="formRDV" novalidate>
+
+      <!-- ── Informations personnelles ── -->
+      <h6 class="text-muted fw-bold mb-3 border-bottom pb-2">
+        <i class="fas fa-user me-1"></i> Vos informations
+      </h6>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <label class="form-label">Nom <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" name="nom" required placeholder="Ex : MBALLA">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Prénom <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" name="prenom" required placeholder="Ex : Jean-Pierre">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+          <input type="tel" class="form-control" name="telephone" required placeholder="Ex : 699 123 456">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email <span class="text-muted small">(optionnel)</span></label>
+          <input type="email" class="form-control" name="email" placeholder="Ex : jean@email.com">
+        </div>
+      </div>
+
+      <!-- ── Consultation ── -->
+      <h6 class="text-muted fw-bold mb-3 border-bottom pb-2">
+        <i class="fas fa-stethoscope me-1"></i> Détails de la consultation
+      </h6>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <label class="form-label">Service médical <span class="text-danger">*</span></label>
+          <select class="form-select" name="service_id" id="service_id" required>
+            <option value="">-- Choisir un service --</option>
+            {% for s in services %}
+            <option value="{{ s.id }}">{{ s.nom }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Médecin <span class="text-danger">*</span></label>
+          <select class="form-select" name="medecin_id" id="medecin_id" required>
+            <option value="">-- Sélectionner un service d'abord --</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Date souhaitée <span class="text-danger">*</span></label>
+          <input type="date" class="form-control" name="date_rdv" id="date_rdv" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Heure souhaitée <span class="text-danger">*</span></label>
+          <select class="form-select" name="heure_rdv" required>
+            <option value="">-- Choisir une heure --</option>
+            {% set heures = ['07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00',
+                             '11:30','12:00','13:00','13:30','14:00','14:30','15:00','15:30','16:00'] %}
+            {% for h in heures %}
+            <option value="{{ h }}">{{ h }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Motif de la consultation <span class="text-muted small">(optionnel)</span></label>
+          <textarea class="form-control" name="motif" rows="3"
+            placeholder="Décrivez brièvement le motif de votre visite..."></textarea>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-vert px-4">
+          <i class="fas fa-check me-2"></i>Confirmer le rendez-vous
+        </button>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Date minimum = demain
+const dateInput = document.getElementById('date_rdv');
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+dateInput.min = tomorrow.toISOString().split('T')[0];
+
+// Charger les médecins selon le service choisi
+document.getElementById('service_id').addEventListener('change', function() {
+  const serviceId = this.value;
+  const medecinSelect = document.getElementById('medecin_id');
+  medecinSelect.innerHTML = '<option value="">Chargement...</option>';
+
+  if (!serviceId) {
+    medecinSelect.innerHTML = '<option value="">-- Sélectionner un service d\'abord --</option>';
+    return;
+  }
+
+  fetch(`/api/medecins/${serviceId}`)
+    .then(r => r.json())
+    .then(data => {
+      medecinSelect.innerHTML = '<option value="">-- Choisir un médecin --</option>';
+      if (data.length === 0) {
+        medecinSelect.innerHTML = '<option value="">Aucun médecin disponible</option>';
+      } else {
+        data.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.id;
+          opt.textContent = `Dr. ${m.nom} ${m.prenom} — ${m.specialite}`;
+          medecinSelect.appendChild(opt);
+        });
+      }
+    })
+    .catch(() => {
+      medecinSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+    });
+});
+</script>
+{% endblock %}

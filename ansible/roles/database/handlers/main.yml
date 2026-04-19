@@ -1,0 +1,5 @@
+---
+- name: Redémarrer MySQL
+  systemd:
+    name: mysql
+    state: restarted

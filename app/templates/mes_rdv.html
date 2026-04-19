@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Mes rendez-vous{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+  <div class="card-header"><h5><i class="fas fa-search me-2"></i>Rechercher mes rendez-vous</h5></div>
+  <div class="card-body">
+    <form method="POST" class="row g-3 align-items-end">
+      <div class="col-md-8">
+        <label class="form-label">Numéro de téléphone utilisé lors de la réservation</label>
+        <input type="tel" class="form-control form-control-lg" name="telephone"
+               value="{{ telephone }}" placeholder="Ex : 699 123 456" required>
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-vert btn-lg w-100">
+          <i class="fas fa-search me-2"></i>Rechercher
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if rdvs %}
+<h5 class="mb-3"><i class="fas fa-list me-2"></i>{{ rdvs|length }} rendez-vous trouvé(s)</h5>
+{% for rdv in rdvs %}
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <div class="d-flex align-items-center gap-3 mb-2">
+          <span class="badge rounded-pill badge-{{ rdv.statut }} px-3 py-2">
+            {% if rdv.statut == 'en_attente' %}En attente
+            {% elif rdv.statut == 'confirme' %}Confirmé
+            {% else %}Annulé{% endif %}
+          </span>
+          <strong>RDV-{{ '%05d'|format(rdv.id) }}</strong>
+        </div>
+        <p class="mb-1"><i class="fas fa-hospital me-1 text-muted"></i> <strong>{{ rdv.service_nom }}</strong></p>
+        <p class="mb-1"><i class="fas fa-user-md me-1 text-muted"></i> Dr. {{ rdv.medecin_nom }} {{ rdv.medecin_prenom }}</p>
+        <p class="mb-1"><i class="fas fa-calendar me-1 text-muted"></i>
+          {{ rdv.date_rdv.strftime('%d/%m/%Y') if rdv.date_rdv else rdv.date_rdv }}
+          à {{ rdv.heure_rdv }}
+        </p>
+        {% if rdv.motif %}
+        <p class="mb-0 text-muted small"><i class="fas fa-comment me-1"></i> {{ rdv.motif }}</p>
+        {% endif %}
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        {% if rdv.statut != 'annule' %}
+        <form method="POST" action="{{ url_for('annuler_rdv', rdv_id=rdv.id) }}"
+              onsubmit="return confirm('Voulez-vous vraiment annuler ce rendez-vous ?')">
+          <button type="submit" class="btn btn-rouge btn-sm">
+            <i class="fas fa-times me-1"></i>Annuler ce RDV
+          </button>
+        </form>
+        {% else %}
+        <span class="text-muted small"><i class="fas fa-ban me-1"></i>Rendez-vous annulé</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

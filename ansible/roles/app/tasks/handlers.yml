@@ -1,0 +1,6 @@
+---
+- name: Redémarrer le service Gunicorn
+  systemd:
+    name: hopital-yaounde
+    state: restarted
+    daemon_reload: yes

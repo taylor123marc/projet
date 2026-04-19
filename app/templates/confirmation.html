@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Confirmation – RDV-{{ '%05d'|format(rdv.id) }}{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+  <div class="card-body py-5">
+    <i class="fas fa-check-circle fa-4x mb-3" style="color:var(--vert)"></i>
+    <h3 class="fw-bold">Rendez-vous confirmé !</h3>
+    <p class="text-muted">Votre rendez-vous a bien été enregistré.</p>
+
+    <div class="card mx-auto mt-4" style="max-width:480px;">
+      <div class="card-header"><h5>Récapitulatif</h5></div>
+      <ul class="list-group list-group-flush text-start">
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-muted">Référence</span>
+          <strong class="text-success">RDV-{{ '%05d'|format(rdv.id) }}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-muted">Patient</span>
+          <strong>{{ rdv.prenom }} {{ rdv.nom }}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-muted">Service</span>
+          <strong>{{ rdv.service_nom }}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-muted">Médecin</span>
+          <strong>Dr. {{ rdv.medecin_nom }} {{ rdv.medecin_prenom }}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-muted">Date</span>
+          <strong>{{ rdv.date_rdv.strftime('%d/%m/%Y') if rdv.date_rdv else rdv.date_rdv }}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-muted">Heure</span>
+          <strong>{{ rdv.heure_rdv }}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-muted">Téléphone</span>
+          <strong>{{ rdv.telephone }}</strong>
+        </li>
+      </ul>
+    </div>
+
+    <div class="alert alert-info mt-4 mx-auto" style="max-width:480px;">
+      <i class="fas fa-info-circle me-2"></i>
+      Notez votre référence <strong>RDV-{{ '%05d'|format(rdv.id) }}</strong> pour retrouver ou annuler votre rendez-vous.
+    </div>
+
+    <div class="mt-3 d-flex gap-2 justify-content-center">
+      <a href="{{ url_for('index') }}" class="btn btn-vert">
+        <i class="fas fa-home me-2"></i>Retour à l'accueil
+      </a>
+      <a href="{{ url_for('prendre_rdv') }}" class="btn btn-outline-secondary">
+        Nouveau rendez-vous
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

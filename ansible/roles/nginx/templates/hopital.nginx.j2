@@ -1,0 +1,29 @@
+server {
+    listen 80;
+    server_name {{ server_name }};
+
+    # Taille maximale des uploads
+    client_max_body_size 10M;
+
+    # Logs
+    access_log /var/log/nginx/hopital-access.log;
+    error_log  /var/log/nginx/hopital-error.log;
+
+    # Fichiers statiques (CSS, JS, images) servis directement par Nginx
+    location /static/ {
+        alias {{ app_dir }}/static/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Tout le reste → Gunicorn (Flask)
+    location / {
+        proxy_pass         http://127.0.0.1:{{ app_port }};
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_read_timeout 90;
+        proxy_connect_timeout 90;
+    }
+}

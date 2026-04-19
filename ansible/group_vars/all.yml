@@ -1,0 +1,15 @@
+---
+# ── Base de données ───────────────────────────
+mysql_root_password: "taylor"
+mysql_db: "hopital_yaounde"
+mysql_user: "hopital_user"
+mysql_password: "taylor"
+
+# ── Application Flask ─────────────────────────
+app_name: "hopital-yaounde"
+app_dir: "/opt/hopital-yaounde"
+app_port: 5000
+secret_key: "taylor"
+
+# ── Nginx ─────────────────────────────────────
+server_name: "4.204.25.28"          # Remplacer par votre domaine ou IP publique
