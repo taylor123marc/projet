@@ -140,7 +140,6 @@ ansible-playbook -i inventory.ini deploy.yml --tags app
 sudo systemctl status hopital-yaounde
 sudo systemctl status nginx
 sudo systemctl status mysql
-<img width="1442" height="332" alt="image" src="https://github.com/user-attachments/assets/3671595a-9959-4a5f-8c1e-7a9f7a6b569c" />
 
 # Redémarrer l'application
 sudo systemctl restart hopital-yaounde
@@ -152,6 +151,7 @@ sudo tail -f /var/log/nginx/hopital-error.log
 # Accéder à la base de données
 mysql -u hopital_user -p hopital_yaounde
 ```
+<img width="1442" height="332" alt="image" src="https://github.com/user-attachments/assets/3671595a-9959-4a5f-8c1e-7a9f7a6b569c" />
 
 ---
 
