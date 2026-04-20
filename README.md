@@ -245,3 +245,4 @@ USE hopital_yaounde;
 ```bash
 SHOW DATABASES;
 ```
+<img width="980" height="664" alt="image" src="https://github.com/user-attachments/assets/11289dbd-c239-4d8e-9435-33c7eead8b08" />
