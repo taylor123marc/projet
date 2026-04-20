@@ -152,6 +152,8 @@ sudo tail -f /var/log/nginx/hopital-error.log
 mysql -u hopital_user -p hopital_yaounde
 ```
 <img width="1442" height="332" alt="image" src="https://github.com/user-attachments/assets/3671595a-9959-4a5f-8c1e-7a9f7a6b569c" />
+<img width="1457" height="332" alt="image" src="https://github.com/user-attachments/assets/58cf7a8c-da12-46dd-a8cd-67d6be327669" />
+
 
 ---
 
@@ -205,6 +207,7 @@ JOIN services s ON r.service_id = s.id
 JOIN medecins m ON r.medecin_id = m.id
 ORDER BY r.date_rdv, r.heure_rdv;
 ```
+<img width="1737" height="646" alt="image" src="https://github.com/user-attachments/assets/465edd08-3c37-4c19-8859-d84b52c8593f" />
 
 -- Voir les rendez-vous du jour
 ```bash
@@ -220,6 +223,7 @@ SELECT * FROM medecins;
 ```bash
 SELECT * FROM services;
 ```
+<img width="1264" height="651" alt="image" src="https://github.com/user-attachments/assets/68df47e0-7c43-47c5-be9e-65b957827cca" />
 
 -- Compter les rendez-vous par statut
 ```bash
