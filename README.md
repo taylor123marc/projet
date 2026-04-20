@@ -61,15 +61,16 @@ ansible --version
 
 ### Étape 1 – Configurer l'inventaire
 
-Ouvrez `ansible/inventory.ini` et remplacez l'IP :
+Ouvre `ansible/inventory.ini` :
 
 ```ini
 [master]
 4.204.25.28  ansible_user=admin12  ansible_ssh_private_key_file=~/.ssh/tay.pem
 ```
+<img width="972" height="256" alt="image" src="https://github.com/user-attachments/assets/36db2d3d-bd07-41df-91c9-ef0cbcdcf8d5" />
 
 
-### Étape 2 – Ajuster les mots de passe (optionnel)
+### Étape 2 – Ajustez les mots de passe (optionnel)
 
 Ouvrez `ansible/group_vars/all.yml` et modifiez si nécessaire :
 
